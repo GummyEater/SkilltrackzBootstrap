@@ -14,13 +14,14 @@ import {
 import "./AppContainer.css";
 import { Gear, Person, Palette, People } from "react-bootstrap-icons";
 import HomeContainer from "./pages/HomeContainer";
-import TrackingContainer from "./pages/TrackingContainer";
+import TrackingPage from "./pages/TrackingPage";
+import ThemesPage from "./pages/ThemesPage";
 
 class ThemeProv extends React.Component {
   render() {
-    if (this.props.currentTheme === "darkly") {
+    if (this.props.current === "darkly") {
       return <Darkly />;
-    } else if (this.props.currentTheme === "lux") {
+    } else if (this.props.current === "lux") {
       return <Lux />;
     } else {
       return <div>Error</div>;
@@ -29,23 +30,13 @@ class ThemeProv extends React.Component {
 }
 
 class PrimaryApp extends React.Component {
-  swapTheme = () => {
-    if (this.props.currentTheme === this.props.primaryTheme) {
-      this.props.setCurrentTheme(this.props.secondaryTheme);
-      this.props.setCurrentThemeMode(this.props.secondaryThemeMode);
-    } else {
-      this.props.setCurrentTheme(this.props.primaryTheme);
-      this.props.setCurrentThemeMode(this.props.primaryThemeMode);
-    }
-  };
-
   render() {
     return (
       <Router>
         <ThemeProv {...this.props} />
         <Navbar
-          variant={this.props.currentThemeMode}
-          bg={this.props.currentThemeMode}
+          variant={this.props.currentMode}
+          bg={this.props.currentMode}
           expand="lg"
         >
           <Navbar.Brand href="/">SkilltrackzV</Navbar.Brand>
@@ -63,7 +54,7 @@ class PrimaryApp extends React.Component {
                 <Button>
                   <People />
                 </Button>
-                <Button onClick={this.swapTheme}>
+                <Button href="/themes">
                   <Palette />
                 </Button>
                 <Button>
@@ -75,8 +66,11 @@ class PrimaryApp extends React.Component {
         </Navbar>
 
         <Switch>
+          <Route path="/themes" exact>
+            <ThemesPage />
+          </Route>
           <Route path="/tracking" exact>
-            <TrackingContainer />
+            <TrackingPage />
           </Route>
           <Route path="/" exact>
             <HomeContainer />
@@ -88,27 +82,13 @@ class PrimaryApp extends React.Component {
 }
 
 const mapState = (state) => ({
-  primaryTheme: state.primaryTheme,
-  primaryThemeMode: state.primaryThemeMode,
-  secondaryTheme: state.secondaryTheme,
-  secondaryThemeMode: state.secondaryThemeMode,
-  currentTheme: state.currentTheme,
-  currentThemeMode: state.currentThemeMode,
+  current: state.theme.current,
+  currentMode: state.theme.currentMode,
 });
 
 const mapDispatch = (dispatch) => ({
-  setPrimaryTheme: (setPrimaryTheme) =>
-    dispatch.theme.setPrimaryTheme(setPrimaryTheme),
-  setPrimaryThemeMode: (setPrimaryThemeMode) =>
-    dispatch.themeMode.setPrimaryThemeMode(setPrimaryThemeMode),
-  setSecondaryTheme: (secondaryTheme) =>
-    dispatch.secondaryTheme.setSecondaryTheme(secondaryTheme),
-  setSecondaryThemeMode: (secondaryThemeMode) =>
-    dispatch.secondaryThemeMode.setSecondaryThemeMode(secondaryThemeMode),
-  setCurrentTheme: (currentTheme) =>
-    dispatch.currentTheme.setCurrentTheme(currentTheme),
-  setCurrentThemeMode: (currentThemeMode) =>
-    dispatch.currentThemeMode.setCurrentThemeMode(currentThemeMode),
+  changeCurrentTheme: (newTheme, newMode) =>
+    dispatch.theme.changeCurrentTheme([newTheme, newMode]),
 });
 
 const AppContainer = connect(mapState, mapDispatch)(PrimaryApp);

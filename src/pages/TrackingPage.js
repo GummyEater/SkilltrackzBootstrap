@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import "./HomeContainer.scss";
+import "./TrackingPage.scss";
 
 class Tracking extends React.Component {
   render() {
@@ -12,6 +12,6 @@ const mapState = (state) => ({});
 
 const mapDispatch = (dispatch) => ({});
 
-const TrackingContainer = connect(mapState, mapDispatch)(Tracking);
+const TrackingPage = connect(mapState, mapDispatch)(Tracking);
 
-export default TrackingContainer;
+export default TrackingPage;
